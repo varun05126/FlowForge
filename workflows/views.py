@@ -1,56 +1,51 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.views import View
-import json
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from .models import Workflow, Credential
 from .services.nl_parser import nl_parser_service
 from .services.execution_engine import execution_engine_service
 from .services.credentials.vault import credential_vault
+import json
 
-@method_decorator(csrf_exempt, name='dispatch')
-class ParseWorkflowView(View):
+class ParseWorkflowView(APIView):
     """
     POST /api/workflows/parse
     Accepts NL text, returns structured workflow JSON
     """
+    permission_classes = [AllowAny]
     def post(self, request):
         try:
-            data = json.loads(request.body)
-            nl_text = data.get('text', '')
+            nl_text = request.data.get('text', '')
             if not nl_text:
-                return JsonResponse({'error': 'Text is required'}, status=400)
+                return Response({'error': 'Text is required'}, status=status.HTTP_400_BAD_REQUEST)
             
             # Use the NL parser service to get structured workflow
             workflow_data = nl_parser_service.parse(nl_text)
             
             # In a real app, we might save the workflow here, but the endpoint is just for parsing
-            return JsonResponse(workflow_data)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+            return Response(workflow_data)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class WorkflowListCreateView(View):
+class WorkflowListCreateView(APIView):
     """
     GET /api/workflows -> list workflows
     POST /api/workflows -> save a workflow
     """
     def get(self, request):
         workflows = Workflow.objects.all().values()
-        return JsonResponse(list(workflows), safe=False)
+        return Response(list(workflows))
     
     def post(self, request):
         try:
-            data = json.loads(request.body)
             # Handle credential encryption if present
             credential_id = None
-            if data.get('credential_data'):
+            if request.data.get('credential_data'):
                 # Encrypt and store the credential data
-                credential_data = data['credential_data']
-                credential_name = data.get('credential_name', 'Unnamed Credential')
-                credential_service = data.get('credential_service', 'Unknown')
+                credential_data = request.data['credential_data']
+                credential_name = request.data.get('credential_name', 'Unnamed Credential')
+                credential_service = request.data.get('credential_service', 'Unknown')
                 
                 # Create or get the credential record
                 credential, created = Credential.objects.get_or_create(
@@ -67,22 +62,19 @@ class WorkflowListCreateView(View):
             
             # Create a new workflow
             workflow = Workflow.objects.create(
-                name=data.get('name', 'Unnamed Workflow'),
-                description=data.get('description', ''),
-                nl_request=data.get('nl_request', ''),
-                workflow_json=json.dumps(data.get('workflow_json', {})),
+                name=request.data.get('name', 'Unnamed Workflow'),
+                description=request.data.get('description', ''),
+                nl_request=request.data.get('nl_request', ''),
+                workflow_json=json.dumps(request.data.get('workflow_json', {})),
                 credential_id=credential_id,
-                trigger_type=data.get('trigger_type', 'manual'),
-                is_active=data.get('is_active', True)
+                trigger_type=request.data.get('trigger_type', 'manual'),
+                is_active=request.data.get('is_active', True)
             )
-            return JsonResponse({'id': workflow.id, 'message': 'Workflow created successfully'}, status=201)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+            return Response({'id': workflow.id, 'message': 'Workflow created successfully'}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class WorkflowDetailView(View):
+class WorkflowDetailView(APIView):
     """
     GET /api/workflows/:id -> get one workflow
     """
@@ -131,14 +123,13 @@ class WorkflowDetailView(View):
                 'created_at': workflow.created_at,
                 'updated_at': workflow.updated_at
             }
-            return JsonResponse(response_data)
+            return Response(response_data)
         except Workflow.DoesNotExist:
-            return JsonResponse({'error': 'Workflow not found'}, status=404)
+            return Response({'error': 'Workflow not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class WorkflowRunView(View):
+class WorkflowRunView(APIView):
     """
     POST /api/workflows/:id/run -> trigger manual execution (stubbed)
     """
@@ -146,13 +137,12 @@ class WorkflowRunView(View):
         try:
             # Run the workflow using the execution engine service
             result = execution_engine_service.run_workflow(workflow_id)
-            return JsonResponse(result)
+            return Response(result)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Additional credential management endpoints
-@method_decorator(csrf_exempt, name='dispatch')
-class CredentialListCreateView(View):
+class CredentialListCreateView(APIView):
     """
     GET /api/credentials -> list credentials (without secrets)
     POST /api/credentials -> create a new credential
@@ -167,17 +157,16 @@ class CredentialListCreateView(View):
             cred_obj = Credential.objects.get(id=cred['id'])
             cred['has_secret'] = cred_obj.is_encrypted()
             credential_list.append(cred)
-        return JsonResponse(credential_list, safe=False)
+        return Response(credential_list)
     
     def post(self, request):
         try:
-            data = json.loads(request.body)
-            name = data.get('name')
-            service = data.get('service')
-            secret_key = data.get('secret_key')
+            name = request.data.get('name')
+            service = request.data.get('service')
+            secret_key = request.data.get('secret_key')
             
             if not name or not service:
-                return JsonResponse({'error': 'Name and service are required'}, status=400)
+                return Response({'error': 'Name and service are required'}, status=status.HTTP_400_BAD_REQUEST)
             
             # Create or get the credential
             credential, created = Credential.objects.get_or_create(
@@ -191,17 +180,14 @@ class CredentialListCreateView(View):
             
             credential.save()
             
-            return JsonResponse({
+            return Response({
                 'id': credential.id,
                 'message': 'Credential created successfully' if created else 'Credential updated successfully'
-            }, status=201 if created else 200)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+            }, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CredentialDetailView(View):
+class CredentialDetailView(APIView):
     """
     GET /api/credentials/:id -> get a credential (without secret)
     PUT /api/credentials/:id -> update a credential
@@ -210,7 +196,7 @@ class CredentialDetailView(View):
     def get(self, request, credential_id):
         try:
             credential = Credential.objects.get(id=credential_id)
-            return JsonResponse({
+            return Response({
                 'id': credential.id,
                 'name': credential.name,
                 'service': credential.service,
@@ -219,14 +205,14 @@ class CredentialDetailView(View):
                 'updated_at': credential.updated_at
             })
         except Credential.DoesNotExist:
-            return JsonResponse({'error': 'Credential not found'}, status=404)
+            return Response({'error': 'Credential not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def put(self, request, credential_id):
         try:
             credential = Credential.objects.get(id=credential_id)
-            data = json.loads(request.body)
+            data = request.data
             
             if 'name' in data:
                 credential.name = data['name']
@@ -237,20 +223,18 @@ class CredentialDetailView(View):
             
             credential.save()
             
-            return JsonResponse({'message': 'Credential updated successfully'})
+            return Response({'message': 'Credential updated successfully'})
         except Credential.DoesNotExist:
-            return JsonResponse({'error': 'Credential not found'}, status=404)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+            return Response({'error': 'Credential not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def delete(self, request, credential_id):
         try:
             credential = Credential.objects.get(id=credential_id)
             credential.delete()
-            return JsonResponse({'message': 'Credential deleted successfully'})
+            return Response({'message': 'Credential deleted successfully'})
         except Credential.DoesNotExist:
-            return JsonResponse({'error': 'Credential not found'}, status=404)
+            return Response({'error': 'Credential not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
