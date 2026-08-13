@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styles -->
+  <defs>
+    <style type="text/css"><![CDATA[
+      .box { rx: 8; ry: 8; }
+      .frontend { fill: #E3F2FD; stroke: #1565C0; stroke-width: 2; }
+      .backend { fill: #E8F5E9; stroke: #2E7D32; stroke-width: 2; }
+      .nllayer { fill: #FFF3E0; stroke: #EF6C00; stroke-width: 2; }
+      .engine { fill: #F3E5F5; stroke: #6A1B9A; stroke-width: 2; }
+      .vault { fill: #FAFAFA; stroke: #9E9E9E; stroke-width: 2; }
+      .external { fill: #FFFDE7; stroke: #F57F17; stroke-width: 2; }
+      .database { fill: #E1F5FE; stroke: #01579B; stroke-width: 2; }
+      .text { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #212121; }
+      .title { font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; fill: #212121; }
+      .arrow { fill: none; stroke: #757575; stroke-width: 2; marker-end: url(#arrowhead); }
+    ]]></style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#757575" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="40" class="title" text-anchor="middle">FlowForge System Architecture</text>
+
+  <!-- Frontend (React) -->
+  <rect x="50" y="80" width="180" height="80" class="box frontend" />
+  <text x="140" y="115" class="text" text-anchor="middle">Frontend (React)</text>
+  <text x="140" y="135" class="text" text-anchor="middle">User builds/views workflows</text>
+
+  <!-- Backend API (Express) -->
+  <rect x="300" y="80" width="180" height="80" class="box backend" />
+  <text x="390" y="115" class="text" text-anchor="middle">Backend API (Express)</text>
+  <text x="390" y="135" class="text" text-anchor="middle">Receives requests, manages workflow CRUD</text>
+
+  <!-- NL Parser / LLM layer (using free provider like Groq or NVIDIA NIM) -->
+  <rect x="550" y="60" width="200" height="80" class="box nllayer" />
+  <text x="650" y="95" class="text" text-anchor="middle">NL Parser / LLM layer</text>
+  <text x="650" y="115" class="text" text-anchor="middle">(Free provider: Groq or NVIDIA NIM)</text>
+
+  <!-- Workflow Execution Engine -->
+  <rect x="550" y="180" width="200" height="80" class="box engine" />
+  <text x="650" y="215" class="text" text-anchor="middle">Workflow Execution Engine</text>
+  <text x="650" y="235" class="text" text-anchor="middle">Runs scheduled/triggered workflows</text>
+
+  <!-- Credential Vault -->
+  <rect x="550" y="300" width="200" height="80" class="box vault" />
+  <text x="650" y="335" class="text" text-anchor="middle">Credential Vault</text>
+  <text x="650" y="355" class="text" text-anchor="middle">Stores integration secrets (referenced by ID)</text>
+
+  <!-- External Integrations -->
+  <rect x="50" y="260" width="200" height="80" class="box external" />
+  <text x="150" y="295" class="text" text-anchor="middle">External Integrations</text>
+  <text x="150" y="315" class="text" text-anchor="middle">ERP portals, WhatsApp/Telegram/Email/SMS, HTTP/webhook</text>
+
+  <!-- Database -->
+  <rect x="300" y="260" width="180" height="80" class="box database" />
+  <text x="390" y="295" class="text" text-anchor="middle">Database</text>
+  <text x="390" y="315" class="text" text-anchor="middle">Stores workflow definitions, run history, user data</text>
+
+  <!-- Arrows -->
+  <!-- Frontend to Backend -->
+  <line x1="230" y1="120" x2="300" y2="120" class="arrow" />
+  <!-- Backend to NL Parser -->
+  <line x1="480" y1="120" x2="550" y2="100" class="arrow" />
+  <!-- Backend to Execution Engine (for scheduling) -->
+  <line x1="480" y1="160" x2="550" y2="220" class="arrow" />
+  <!-- NL Parser to Execution Engine -->
+  <line x1="650" y1="140" x2="650" y2="180" class="arrow" />
+  <!-- Execution Engine to Credential Vault -->
+  <line x1="650" y1="260" x2="650" y2="300" class="arrow" />
+  <!-- Execution Engine to External Integrations -->
+  <line x1="550" y1="260" x2="250" y2="300" class="arrow" />
+  <!-- Execution Engine to Database -->
+  <line x1="650" y1="260" x2="480" y2="300" class="arrow" />
+  <!-- External Integrations to Execution Engine (webhooks) -->
+  <line x1="250" y1="340" x2="550" y2="260" class="arrow" />
+  <!-- Database to Execution Engine (scheduled) -->
+  <line x1="480" y1="340" x2="550" y2="260" class="arrow" />
+</svg>

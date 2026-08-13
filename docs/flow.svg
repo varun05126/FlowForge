@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styles -->
+  <defs>
+    <style type="text/css"><![CDATA[
+      .box { rx: 8; ry: 8; }
+      .step1 { fill: #E3F2FD; stroke: #1565C0; stroke-width: 2; }
+      .step2 { fill: #F3E5F5; stroke: #6A1B9A; stroke-width: 2; }
+      .step3 { fill: #FFF8E1; stroke: #F57F17; stroke-width: 2; }
+      .step4 { fill: #E8F5E9; stroke: #2E7D32; stroke-width: 2; }
+      .step5 { fill: #FFEBEE; stroke: #C62828; stroke-width: 2; }
+      .step6 { fill: #E1F5FE; stroke: #01579B; stroke-width: 2; }
+      .step7 { fill: #F5F5F5; stroke: #9E9E9E; stroke-width: 2; }
+      .text { font-family: Arial, Helvetica, sans-serif; font-size: 14px; fill: #212121; }
+      .step-number { font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; fill: #212121; }
+      .arrow { fill: none; stroke: #757575; stroke-width: 2; marker-end: url(#arrowhead); }
+      .arrow-loop { fill: none; stroke: #757575; stroke-width: 2; marker-end: url(#arrowhead); stroke-dasharray: 5,5; }
+    ]]></style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#757575" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" class="step-number" text-anchor="middle">Request-to-Execution Flow</text>
+
+  <!-- Step 1: User Input -->
+  <rect x="300" y="60" width="200" height="80" class="box step1" />
+  <text x="400" y="95" class="step-number" text-anchor="middle">1</text>
+  <text x="400" y="115" class="text" text-anchor="middle">User types natural-language request</text>
+  <text x="400" y="135" class="text" text-anchor="middle">(e.g. "get daily attendance from college ERP")</text>
+
+  <!-- Step 2: NL Parser -->
+  <rect x="300" y="180" width="200" height="80" class="box step2" />
+  <text x="400" y="215" class="step-number" text-anchor="middle">2</text>
+  <text x="400" y="235" class="text" text-anchor="middle">NL Parser extracts trigger, source, conditions, action</text>
+
+  <!-- Step 3: Clarifying Questions -->
+  <rect x="300" y="300" width="200" height="80" class="box step3" />
+  <text x="400" y="335" class="step-number" text-anchor="middle">3</text>
+  <text x="400" y="355" class="text" text-anchor="middle">Clarifying questions loop back to user if info is missing</text>
+  <text x="400" y="375" class="text" text-anchor="middle">(credentials, schedule, channel)</text>
+
+  <!-- Step 4: Structured Workflow JSON -->
+  <rect x="300" y="420" width="200" height="80" class="box step4" />
+  <text x="400" y="455" class="step-number" text-anchor="middle">4</text>
+  <text x="400" y="475" class="text" text-anchor="middle">Structured workflow JSON is generated</text>
+
+  <!-- Step 5: Save and Schedule -->
+  <rect x="300" y="540" width="200" height="80" class="box step5" />
+  <text x="400" y="575" class="step-number" text-anchor="middle">5</text>
+  <text x="400" y="595" class="text" text-anchor="middle">Workflow is saved and scheduled</text>
+
+  <!-- Step 6: Execution Engine -->
+  <rect x="300" y="660" width="200" height="80" class="box step6" />
+  <text x="400" y="695" class="step-number" text-anchor="middle">6</text>
+  <text x="400" y="715" class="text" text-anchor="middle">Execution engine runs it on trigger → fetches data → processes → delivers output</text>
+
+  <!-- Step 7: Storage and Notification -->
+  <rect x="300" y="780" width="200" height="80" class="box step7" />
+  <text x="400" y="815" class="step-number" text-anchor="middle">7</text>
+  <text x="400" y="835" class="text" text-anchor="middle">Result/logs stored, user notified</text>
+
+  <!-- Arrows -->
+  <!-- Step 1 to Step 2 -->
+  <line x1="400" y1="140" x2="400" y2="180" class="arrow" />
+  <!-- Step 2 to Step 3 -->
+  <line x1="400" y1="260" x2="400" y2="300" class="arrow" />
+  <!-- Step 3 to Step 4 -->
+  <line x1="400" y1="380" x2="400" y2="420" class="arrow" />
+  <!-- Step 4 to Step 5 -->
+  <line x1="400" y1="500" x2="400" y2="540" class="arrow" />
+  <!-- Step 5 to Step 6 -->
+  <line x1="400" y1="620" x2="400" y2="660" class="arrow" />
+  <!-- Step 6 to Step 7 -->
+  <line x1="400" y1="740" x2="400" y2="780" class="arrow" />
+  <!-- Loop from Step 3 back to Step 1 (dashed line) -->
+  <path d="M 300 340 L 100 340 L 100 100 L 500 100 L 400 140" fill="none" stroke="#757575" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray: 5,5;" />
+  </svg>
