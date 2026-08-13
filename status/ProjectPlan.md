@@ -33,11 +33,11 @@ This file tracks the progress of the FlowForge project across its phases.
 - [x] Backend: Added credential management endpoints (CRUD operations)
 - [x] Frontend: Display workflow list, detail views, and run history (basic implementation in progress)
 
-### Phase 3: Integration and Advanced Features - **NOT STARTED**
+### Phase 3: Integration and Advanced Features - **IN PROGRESS**
 - [ ] Frontend: Workflow visualizer (node-based or flowchart)
 - [ ] Backend: Support for various triggers (schedule, webhook, manual)
 - [ ] Backend: Integration with external services (ERP, WhatsApp/Telegram/Email/SMS, webhooks)
-- [ ] Backend: Add authentication and authorization (JWT)
+- [x] Backend: Add authentication and authorization (JWT)
 - [ ] Frontend: User authentication and personal workflow management
 
 ### Phase 4: Testing, Deployment, and Documentation - **NOT STARTED**
