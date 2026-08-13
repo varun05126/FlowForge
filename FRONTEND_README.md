@@ -1,41 +1,70 @@
-# FlowForge — turn plain-English requests into automated workflows.
+FlowForge Frontend
 
-FlowForge is a platform that allows users to automate tasks by describing them in natural language. The system parses the request, extracts the necessary components (trigger, source, conditions, action), and generates a structured workflow that can be executed automatically.
+This is the frontend component of FlowForge, built with HTML, CSS, and vanilla JavaScript.
 
-## Problem it solves
-Many users want to automate repetitive tasks but lack the technical skills to set up complex integrations and scheduling. FlowForge bridges this gap by converting plain English into actionable workflows.
+## Features
+- Workflow builder interface for describing workflows in plain English
+- Real-time parsing and visualization of workflow structure
+- Responsive design for mobile and desktop
+- Placeholder for API integration with the backend
 
-## Architecture
-![System Architecture](docs/architecture.svg)
+## Project Structure
+```
+src/
+├── index.html      # Main HTML file
+├── css/
+│   └── styles.css  # Styling for the application
+�└── js/
+    └── app.js      # Application logic
+```
 
-## Request-to-Execution Flow
-![Workflow Execution Flow](docs/flow.svg)
+## Setup Instructions
 
-## Branch structure
-- `main` — Contains shared documentation, architecture diagrams, and configuration files.
-- `frontend` — React (Vite) application for building and viewing workflows.
-- `backend` — Node.js (Express) API for handling workflow CRUD, NL parsing, and execution.
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone https://github.com/varun05126/FlowForge.git
+   ```
 
-## Local setup instructions
+2. **Checkout the frontend branch**:
+   ```bash
+   git checkout frontend
+   ```
 
-### Backend
-1. Checkout the backend branch: `git checkout backend`
-2. Install dependencies: `npm install`
-3. Copy `.env.example` to `.env` and fill in the required values (never commit real `.env`).
-4. Start the development server: `npm run dev`
+3. **Install dependencies**: 
+   *This frontend uses only HTML/CSS/JS, so no npm dependencies are required.*
+   However, if you wish to use a development server, you can install a simple one like `serve`:
+   ```bash
+   npm install -g serve
+   ```
 
-### Frontend
-1. Checkout the frontend branch: `git checkout frontend`
-2. Install dependencies: `npm install`
-3. Copy `.env.example` to `.env` and set `VITE_API_BASE_URL` (e.g., `http://localhost:5000`).
-4. Start the development server: `npm run dev`
+4. **Start the development server**:
+   ```bash
+   serve src
+   ```
+   Then open your browser to `http://localhost:3000` (or the port shown in the terminal).
 
-## Tech stack
-- **Frontend**: React, Vite
-- **Backend**: Node.js, Express
-- **Database**: SQLite (for development), PostgreSQL (for production)
-- **NL Parser**: Integrated with free LLM providers like Groq or NVIDIA NIM (stubbed in initial scaffold)
-- **Others**: Docker (optional), JWT for authentication
+   Alternatively, you can simply open `src/index.html` directly in your browser.
+
+## API Integration
+The frontend is designed to communicate with the FlowForge backend API. 
+To enable API integration:
+
+1. Ensure the backend is running (see backend branch instructions)
+2. Update the `src/js/app.js` file to make actual API calls to the backend endpoints
+3. The placeholder API client would typically be in `src/api/client.js` (to be implemented)
+
+## Folder Explanation
+- `src/index.html`: The main entry point of the application
+- `src/css/styles.css`: Contains all styling for the application
+- `src/js/app.js`: Contains the interactive logic for the workflow builder
+
+## Customization
+- Modify the styles in `src/css/styles.css` to change the look and feel
+- Update the workflow parsing logic in `src/js/app.js` to connect to the actual backend
+- Add more components as needed in separate JavaScript files
+
+## Browser Support
+This frontend works in all modern browsers (Chrome, Firefox, Safari, Edge).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is part of FlowForge and is licensed under the MIT License.
