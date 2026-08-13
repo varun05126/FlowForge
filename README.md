@@ -43,35 +43,38 @@ Many users want to automate repetitive tasks but lack the technical skills to se
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
 - **Backend**: Python, Django REST Framework
 - **Database**: SQLite (for development), PostgreSQL (for production)
-- **NL Parser**: Integrated with free LLM providers like Groq or NVIDIA NIM (stubbed in initial scaffold)
+- **NL Parser**: Rule-based natural language parser (planned upgrade to free LLM providers like Groq or NVIDIA NIM)
+- **Execution Engine**: Simulated execution engine with realistic steps (planned upgrade to actual execution with external service integrations)
+- **Credential Vault**: Encrypted storage for API keys and secrets using Fernet symmetric encryption
 - **Others**: Docker (optional), JWT for authentication (planned)
 
 ## Project Phases
 The project is divided into the following phases:
 
-1. **Phase 1: Project Setup and Scaffolding** (Current)
+1. **Phase 1: Project Setup and Scaffolding** (Completed)
    - Repository initialization with LICENSE
    - Creation of three branches: main, frontend, backend
    - Basic README and documentation
    - Initial architecture and flow diagrams
    - Frontend: Basic HTML/CSS/JS workflow builder UI
-   - Backend: Django project with workflows app, models, and stubbed services
+   - Backend: Django project with workflows app, models, and initial services
 
-2. **Phase 2: Core Functionality Implementation**
-   - Frontend: Connect to backend API for parsing and saving workflows
-   - Backend: Implement actual NL parsing using Groq or NVIDIA NIM API
-   - Backend: Implement workflow execution engine to run scheduled/triggered workflows
-   - Backend: Implement credential vault (encrypted storage for API keys/secrets)
-   - Frontend: Display workflow list, detail views, and run history
+2. **Phase 2: Core Functionality Implementation** (Completed)
+   - Frontend: Connected to backend API for parsing and saving workflows
+   - Backend: Implemented rule-based NL parser for extracting workflow components from natural language
+   - Backend: Implemented simulated execution engine that runs workflows with realistic steps and mock data
+   - Backend: Implemented credential vault with encryption for storing API keys and secrets
+   - Backend: Added credential management endpoints (CRUD operations)
+   - Frontend: Display workflow list, detail views, and run history (planned for next iteration)
 
-3. **Phase 3: Integration and Advanced Features**
+3. **Phase 3: Integration and Advanced Features** (Planned)
    - Frontend: Workflow visualizer (node-based or flowchart)
    - Backend: Support for various triggers (schedule, webhook, manual)
    - Backend: Integration with external services (ERP, WhatsApp/Telegram/Email/SMS, webhooks)
    - Backend: Add authentication and authorization (JWT)
    - Frontend: User authentication and personal workflow management
 
-4. **Phase 4: Testing, Deployment, and Documentation**
+4. **Phase 4: Testing, Deployment, and Documentation** (Planned)
    - Writing unit and integration tests
    - Setting up CI/CD pipeline
    - Dockerizing the application

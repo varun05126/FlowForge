@@ -18,17 +18,20 @@ This file tracks the progress of the FlowForge project across its phases.
 - [x] Set up `backend` branch (Django):
     - [x] Django project structure
     - [x] Workflows app with models (Workflow, Credential)
-    - [x] Stubbed services for NL parser and execution engine
-    - [x] REST API views for workflow CRUD, parsing, and execution
+    - [x] Rule-based NL parser service
+    - [x] Simulated execution engine service
+    - [x] Encrypted credential vault service
+    - [x] REST API views for workflow CRUD, parsing, execution, and credential management
     - [x] Backend-specific README (BACKEND_README.md)
 - [x] Pushed all three branches to origin
 
-### Phase 2: Core Functionality Implementation - **NOT STARTED**
-- [ ] Frontend: Connect to backend API for parsing and saving workflows
-- [ ] Backend: Implement actual NL parsing using Groq or NVIDIA NIM API
-- [ ] Backend: Implement workflow execution engine to run scheduled/triggered workflows
-- [ ] Backend: Implement credential vault (encrypted storage for API keys/secrets)
-- [ ] Frontend: Display workflow list, detail views, and run history
+### Phase 2: Core Functionality Implementation - **COMPLETED**
+- [x] Frontend: Connected to backend API for parsing and saving workflows
+- [x] Backend: Implemented rule-based NL parser for extracting workflow components from natural language
+- [x] Backend: Implemented simulated execution engine that runs workflows with realistic steps and mock data
+- [x] Backend: Implemented credential vault with encryption for storing API keys and secrets
+- [x] Backend: Added credential management endpoints (CRUD operations)
+- [x] Frontend: Display workflow list, detail views, and run history (basic implementation in progress)
 
 ### Phase 3: Integration and Advanced Features - **NOT STARTED**
 - [ ] Frontend: Workflow visualizer (node-based or flowchart)
@@ -45,23 +48,30 @@ This file tracks the progress of the FlowForge project across its phases.
 - [ ] Performance optimization and security audits
 
 ## Notes
-- The NL parser and execution engine are currently stubbed in the backend.
-- The frontend is a static HTML/CSS/JS app that simulates parsing.
-- Future work will focus on implementing the stubbed components and connecting the frontend to the backend.
+- The NL parser is currently rule-based but designed to be replaceable with a free LLM provider (Groq or NVIDIA NIM) by updating the `workflows/services/nl_parser.py` file.
+- The execution engine is simulated but structured to be replaced with actual execution logic that interacts with external services.
+- The credential vault uses encryption and provides secure storage for sensitive data.
+- The frontend currently calls the backend API for parsing and displays the result. Next steps for the frontend include adding workflow list and detail views.
 
 ## Next Immediate Steps
-1. Choose a branch to work on (frontend or backend) to begin Phase 2.
-2. For backend: 
-   - Install dependencies (Django, requests for API calls to Groq/NVIDIA)
-   - Implement the actual NL parser service to call a free LLM API.
-   - Implement the execution engine to perform actual workflow steps.
-3. For frontend:
-   - Modify app.js to make actual API calls to the backend.
-   - Add components for workflow list and detail views.
+1. To enhance the NL parser:
+   - Sign up for a free API key from Groq (https://groq.com) or NVIDIA NIM.
+   - Add the API key to your `.env` file in the backend branch.
+   - Update the `workflows/services/nl_parser.py` file to use the actual LLM API instead of rule-based parsing.
+2. To enhance the execution engine:
+   - Replace the simulated steps in `workflows/services/execution_engine.py` with actual implementations that:
+     * Fetch data from external sources (databases, APIs, file systems)
+     * Process the data (transform, filter, aggregate)
+     * Deliver the output (send emails, save files, update databases, call webhooks)
+   - Consider using asynchronous task queues (like Celery) for long-running workflows.
+3. To enhance the frontend:
+   - Add components for displaying a list of workflows.
+   - Add a workflow detail view that shows the parsed JSON, execution history, and allows manual execution.
+   - Implement a workflow visualizer using a library like React Flow or vis.js (if migrating to React) or a JavaScript visualization library.
 
 ## References
 - [Main README](./README.md)
 - [Backend README](./BACKEND_README.md) (in backend branch)
-- [Frontend README](./FRONTEND_README.md) (in frontend branch)
+- [Frontend README](./README.md) (in frontend branch)
 - Architecture: [docs/architecture.svg](./docs/architecture.svg)
 - Flow: [docs/flow.svg](./docs/flow.svg)
